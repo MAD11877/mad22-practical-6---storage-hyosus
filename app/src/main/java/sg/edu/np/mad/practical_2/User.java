@@ -13,6 +13,10 @@ public class User {
         this.followed = followed;
     }
 
+    public User() {
+
+    }
+
     public void setName(String name) {
         this.name = name;
     }

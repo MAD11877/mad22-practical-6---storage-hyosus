@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,15 +26,26 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        DBAdapter db = new DBAdapter(this);
+
         //  Create list of 20 User objects
         ArrayList<User> userList = new ArrayList<User>();
-        for (int i=0; i<20; i++){
-            int randomint = new Random().nextInt(823172316);
-            int randomintDesc = new Random().nextInt(39817316);
-            boolean randBool = new Random().nextBoolean();
-            userList.add(new User("Name"+String.valueOf(randomint), "Description "+String.valueOf(randomintDesc), 0, randBool));
-        }
+//        for (int i=1; i<21; i++){
+//            User u = new User();
+//            Integer id = 1;
+//            int randomint = new Random().nextInt(823172316);
+//            int randomintDesc = new Random().nextInt(39817316);
+//            boolean randBool = new Random().nextBoolean();
+//            id = i;
+//
+//            u.name = "Name" +String.valueOf(randomint);
+//            u.description = " Description" +String.valueOf(randomintDesc);
+//            u.id = id;
+//            u.followed = randBool;
+//            db.addUser(u);
+//        }
 
+        userList = db.getUser();
 
         //  Create Recycler View
         RecyclerView userListRecyclerView = findViewById(R.id.userListRV);
@@ -43,6 +55,13 @@ public class ListActivity extends AppCompatActivity {
         userListRecyclerView.setLayoutManager(lm);
         userListRecyclerView.setItemAnimator(new DefaultItemAnimator());
         userListRecyclerView.setAdapter(adapter);
+
+        // shared pref
+        SharedPreferences pref=getSharedPreferences("P05",MODE_PRIVATE);
+        String text=pref.getString("Name","Not Found !!");
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("Name", "hello world");
+        editor.apply();
 
     }
 
