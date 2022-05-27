@@ -4,18 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    String thisUname = null;
     @SuppressLint("SetTextI18n")
-    User u = new User("MAD","😎",0,false);
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -25,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         Button fllw = findViewById(R.id.followBtn);
 
         Intent receivingEnd = getIntent();
-        u.name = receivingEnd.getStringExtra("uName");
-        u.description = receivingEnd.getStringExtra("uDesc");
-        u.followed = receivingEnd.getBooleanExtra("uFollowed",false);
+        DBAdapter dba = new DBAdapter(this);
+        User u = dba.getSingleUser(receivingEnd.getStringExtra("uName"));
+        thisUname = u.name;
 
         header.setText(u.name);
         desc.setText(u.description);
@@ -47,23 +49,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(mainActivityIntent);
             }
         }));
+
+        // Shared pref & SQL
+
     }
 
     public void follow(View view){
+        DBAdapter dba = new DBAdapter(this);
         Button fllw = findViewById(R.id.followBtn);
+        User u = dba.getSingleUser(thisUname);
         switch(String.valueOf(u.isFollowed())) {
-                    case "true":
-                        u.followed = false;
-                        fllw.setText("Unfollow");
-                        Toast.makeText(getApplicationContext(), "Followed "+u.name,Toast.LENGTH_SHORT).show();
-                        break;
+            case "true":
+                u.followed = false;
+                fllw.setText("Unfollow");
+                Toast.makeText(getApplicationContext(), "Followed "+u.name,Toast.LENGTH_SHORT).show();
+                break;
 
-                    case "false":
-                        u.followed = true;
-                        fllw.setText("Follow");
-                        Toast.makeText(getApplicationContext(),"Unfollowed "+u.name, Toast.LENGTH_SHORT).show();
-                        break;
+            case "false":
+                u.followed = true;
+                fllw.setText("Follow");
+                Toast.makeText(getApplicationContext(),"Unfollowed "+u.name, Toast.LENGTH_SHORT).show();
+                break;
         }
+        dba.updateUser(u.name, u);
     }
 }
 

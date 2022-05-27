@@ -29,8 +29,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     public void onBindViewHolder(UserViewHolder holder, int position) {
         User u = userList.get(position);
-        holder.name.setText(u.name);
-        holder.desc.setText(u.description);
+//        String name = userList.get(position).getName();
+//        String desc = userList.get(position).getDescription();
+//        String id = String.valueOf(userList.get(position).getId());
+//        String fllw = String.valueOf(userList.get(position).isFollowed());
+//
+        holder.name.setText(u.getName());
+        holder.desc.setText(u.getDescription());
+
+//        holder.name.setText(u.name);
+//        holder.desc.setText(u.description);
 
          holder.img.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -46,7 +54,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
                         mainActivityIntent.putExtra("uName",u.name);
                         mainActivityIntent.putExtra("uDesc",u.description);
                         mainActivityIntent.putExtra("uFollowed",u.isFollowed());
-                        Log.v("peepoo",Boolean.toString(u.isFollowed()));
                         view.getContext().startActivity(mainActivityIntent);
                     }
                 });
@@ -61,7 +68,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
              }
          });
          if (u.name.substring(u.name.length()-1).equals("7")) {
-             Log.v("peepoo",u.name.substring(u.name.length()-1) + String.format(" MEOW SHUD BE HERER %s",position));
              holder.meowImg.setVisibility(View.VISIBLE);
 
          }
